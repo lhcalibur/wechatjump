@@ -13,7 +13,13 @@ from datetime import datetime
 from PIL import Image
 
 CONF = {
-    "press_coefficient": 1.392,
+    # 棋子宽度的一半 pixel
+    "player_w/2": 43,
+    # 棋子高度 pixel
+    "player_h": 202,
+    # 按压系数
+    "press_coefficient": 1.366,
+    # "press_coefficient": 1.392,
 }
 
 MAX_SCREENSHOT_WAY = 2
@@ -80,7 +86,7 @@ def find_top(img1, x1):
     for row in range(300, H):
         for col in range(W // 8, W):
             # 当检测到切点，且切点与棋子的水平距离大于棋子的一半时（排除棋子高于下一个目标的情况）
-            if canny_img[row, col] != 0 and abs(x1 - col) > 39:
+            if canny_img[row, col] != 0 and abs(x1 - col) > CONF['player_w/2']:
                 return row, col, canny_img
 
 
@@ -145,9 +151,9 @@ if __name__ == '__main__':
         # 模板匹配截图中小跳棋的位置
         res1 = cv2.matchTemplate(img_gray, PLAYER_CV, cv2.TM_CCOEFF_NORMED)
         min_val1, max_val1, min_loc1, max_loc1 = cv2.minMaxLoc(res1)
-        center1_loc = (max_loc1[0] + 39, max_loc1[1] + 189)
-        x1 = max_loc1[0] + 39
-        y1 = max_loc1[1] + 189
+        center1_loc = (max_loc1[0] + CONF['player_w/2'], max_loc1[1] + CONF['player_h'])
+        x1 = max_loc1[0] + CONF['player_w/2']
+        y1 = max_loc1[1] + CONF['player_h']
         # 先尝试匹配截图中的中心原点，
         # 如果匹配值没有达到0.95，则使用边缘检测匹配物块上沿
         res2 = cv2.matchTemplate(img_gray, WHITE_CIRCLE_CV, cv2.TM_CCOEFF_NORMED)
