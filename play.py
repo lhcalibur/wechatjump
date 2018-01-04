@@ -84,11 +84,11 @@ def find_top(img1, x1):
                 return row, col, canny_img
 
 
-def find_bottom(canny_img,top_x,top_y):
-  H,W = canny_img.shape
-  for row in range(top_y+5,H):
-    if canny_img[row,top_x] !=0:
-      return row
+def find_bottom(canny_img, top_x, top_y):
+    H, W = canny_img.shape
+    for row in range(top_y + 5, H):
+        if canny_img[row, top_x] != 0:
+            return row
 
 
 def get_button_position(im):
@@ -98,8 +98,8 @@ def get_button_position(im):
     h, w, _ = im.shape
     left = int(w / 2)
     top = int(1584 * (h / 1920.0))
-    left = int(random.uniform(left-50, left+50))
-    top = int(random.uniform(top-10, top+10))    # 随机防 ban
+    left = int(random.uniform(left - 50, left + 50))
+    top = int(random.uniform(top - 10, top + 10))  # 随机防 ban
     return left, top, left, top
 
 
@@ -108,7 +108,7 @@ def jump(distance, im):
     跳跃一定的距离
     '''
     press_time = distance * CONF['press_coefficient']
-    press_time = max(press_time, 200)   # 设置 200ms 是最小的按压时间
+    press_time = max(press_time, 200)  # 设置 200ms 是最小的按压时间
     press_time = int(press_time)
 
     swipe_x1, swipe_y1, swipe_x2, swipe_y2 = get_button_position(im)
@@ -138,7 +138,7 @@ if __name__ == '__main__':
 
         # 如果在游戏截图中匹配到带"再玩一局"字样的模板，则循环中止
         res_end = cv2.matchTemplate(img_gray, END_CV, cv2.TM_CCOEFF_NORMED)
-        if (cv2.minMaxLoc(res_end)[1] > 0.95):
+        if cv2.minMaxLoc(res_end)[1] > 0.95:
             print('Game over!')
             break
 
@@ -178,4 +178,5 @@ if __name__ == '__main__':
             i, next_rest, next_rest_time = 0, random.randrange(30, 100), random.randrange(10, 60)
 
         # 为了保证截图的时候应落稳了，多延迟一会儿，随机值防 ban
-        time.sleep(random.uniform(0.9, 1.2))
+        # time.sleep(random.uniform(0.9, 1.2))
+        time.sleep(random.uniform(1.5, 2))
