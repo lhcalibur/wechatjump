@@ -18,7 +18,7 @@ CONF = {
     # 棋子高度 pixel
     "player_h": 202,
     # 按压系数
-    "press_coefficient": 1.366,
+    "press_coefficient": 1.356,
     # "press_coefficient": 1.392,
 }
 
@@ -58,7 +58,7 @@ def check_screenshot(screenshot_way=MAX_SCREENSHOT_WAY):
     '''
     if os.path.isfile('./images/check.png'):
         os.remove('./images/check.png')
-    if (screenshot_way < 0):
+    if screenshot_way < 0:
         print('暂不支持当前设备')
         if os.path.isfile('./images/check.png'):
             os.remove('./images/check.png')
@@ -86,7 +86,7 @@ def find_top(img1, x1):
     for row in range(300, H):
         for col in range(W // 8, W):
             # 当检测到切点，且切点与棋子的水平距离大于棋子的一半时（排除棋子高于下一个目标的情况）
-            if canny_img[row, col] != 0 and abs(x1 - col) > CONF['player_w/2']:
+            if canny_img[row, col] != 0 and abs(x1 - col) > CONF['player_w/2'] - 10:
                 return row, col, canny_img
 
 
@@ -146,7 +146,7 @@ if __name__ == '__main__':
         res_end = cv2.matchTemplate(img_gray, END_CV, cv2.TM_CCOEFF_NORMED)
         if cv2.minMaxLoc(res_end)[1] > 0.95:
             print('Game over!')
-            break
+            sys.exit()
 
         # 模板匹配截图中小跳棋的位置
         res1 = cv2.matchTemplate(img_gray, PLAYER_CV, cv2.TM_CCOEFF_NORMED)
